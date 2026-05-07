@@ -20,6 +20,31 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Docker
+
+### Construir la imagen
+
+```bash
+docker build -t satur-app .
+```
+
+### Correr el contenedor
+
+```bash
+docker run -d --name satur-app -p 3000:3000 satur-app
+```
+
+Abre [http://localhost:3000](http://localhost:3000) para ver la app.
+
+### Otros comandos
+
+```bash
+docker stop satur-app     # detener
+docker start satur-app    # reiniciar
+docker logs satur-app     # ver logs
+docker rm satur-app       # eliminar contenedor
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
