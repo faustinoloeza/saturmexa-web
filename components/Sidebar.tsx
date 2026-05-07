@@ -51,7 +51,7 @@ export default function Sidebar({
       <aside
         className={`${
           open ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:static left-0 top-0 z-50 lg:z-auto w-80 h-full flex flex-col border-r border-base-300 transition-transform duration-300`}
+        } lg:translate-x-0 fixed lg:static left-0 top-0 z-50 lg:z-auto w-80 h-full flex flex-col bg-white border-r border-base-300 transition-transform duration-300`}
       >
         <div className="p-4 border-b border-base-300">
           <div className="flex items-center justify-between mb-3">
