@@ -9,7 +9,11 @@
 .leaflet-container {
   height: 100%;
   width: 100%;
-  z-index: 1;
+  z-index: 0;
+}
+
+.leaflet-control-container {
+  z-index: 500;
 }
 
 /* Safari backdrop-blur fallback */

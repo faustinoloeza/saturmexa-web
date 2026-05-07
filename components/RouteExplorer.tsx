@@ -100,12 +100,12 @@ export default function RouteExplorer({
         onClose={closeSidebar}
       />
 
-      <div className="flex-1 relative min-w-0">
+      <div className="flex-1 relative min-w-0 lg:ml-80 z-0">
         <MapView routes={selectedRoutes} colorMap={colorMap} />
 
         <button
           onClick={toggleSidebar}
-          className="btn btn-square bg-base-200 border border-base-300 shadow-lg absolute top-3 left-3 z-[1000] lg:hidden"
+          className="btn btn-square bg-base-200 border border-base-300 shadow-lg absolute top-3 left-3 z-[1001] lg:hidden"
           aria-label="Abrir menú"
         >
           <svg

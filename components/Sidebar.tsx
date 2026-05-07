@@ -48,11 +48,11 @@ export default function Sidebar({
           onClick={onClose}
         />
       )}
-      <aside
-        className={`${
-          open ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:static left-0 top-0 z-50 lg:z-auto w-80 h-full flex flex-col bg-white border-r border-base-300 transition-transform duration-300`}
-      >
+        <aside
+          className={`${
+            open ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0 fixed lg:static left-0 top-0 z-[60] lg:z-0 w-80 h-full flex flex-col bg-white border-r border-base-300 transition-transform duration-300`}
+        >
         <div className="p-4 border-b border-base-300">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-bold">Rutas</h2>
@@ -81,7 +81,7 @@ export default function Sidebar({
           </div>
         </div>
 
-        <ul className="flex-1 overflow-y-auto p-2 space-y-1">
+        <ul className="flex-1 overflow-y-auto p-2 space-y-1 h-[calc(100vh-200px)]">
           {filtered.length === 0 ? (
             <li className="text-sm text-base-content/50 p-3 text-center">
               Sin resultados
