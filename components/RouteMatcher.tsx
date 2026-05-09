@@ -22,6 +22,7 @@ import MovingBuses from "@/components/map/MovingBuses";
 import Geofences from "@/components/map/Geofences";
 
 const RADIUS = 500;
+const TUTORIAL_KEY = "satur-tutorial-v1";
 
 const RED_ICON = L.divIcon({
   className: "bg-transparent",
@@ -75,12 +76,19 @@ interface RouteMatcherProps {
 export default function RouteMatcher({ routes, initialOrigen = null, initialDestino = null, onChange }: RouteMatcherProps) {
   const [origen, setOrigen] = useState<[number, number] | null>(initialOrigen);
   const [destino, setDestino] = useState<[number, number] | null>(initialDestino);
-  const [stage, setStage] = useState<Stage>(
-    initialOrigen && initialDestino ? "origen" : initialOrigen ? "destino" : "origen"
-  );
+  const [stage, setStage] = useState<Stage>("origen");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [useDestination, setUseDestination] = useState(!!(initialOrigen && initialDestino));
   const prevMatchIds = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem(TUTORIAL_KEY)) {
+      setTutorialOpen(true);
+      localStorage.setItem(TUTORIAL_KEY, "1");
+    }
+  }, []);
 
   const colorMap: ColorMap = useMemo(() => {
     const map: ColorMap = {};
@@ -160,6 +168,11 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
 
   const handleMapClick = useCallback(
     (p: [number, number]) => {
+      if (!useDestination) {
+        setOrigen(p);
+        setDestino(null);
+        return;
+      }
       if (stage === "origen") {
         setOrigen(p);
         setStage("destino");
@@ -167,7 +180,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
         setDestino(p);
       }
     },
-    [stage]
+    [stage, useDestination]
   );
 
   const resetOrigen = () => {
@@ -192,6 +205,18 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
     const ll = m.getLatLng();
     setDestino([ll.lat, ll.lng]);
   }, []);
+
+  const handleUseDestinationToggle = () => {
+    setUseDestination((prev) => {
+      if (prev) {
+        setDestino(null);
+        setStage("origen");
+      } else if (origen) {
+        setStage("destino");
+      }
+      return !prev;
+    });
+  };
 
   const handleStageToggle = () => {
     if (origen) setStage((s) => (s === "origen" ? "destino" : "origen"));
@@ -275,7 +300,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                 <span className="text-sm font-medium flex items-center gap-2">
                   <span
                     className={`w-3 h-3 rounded-full shrink-0 ${
-                      stage === "origen" ? "ring-2 ring-base-content/30" : ""
+                      useDestination && stage === "origen" ? "ring-2 ring-base-content/30" : ""
                     }`}
                     style={{ backgroundColor: "#e74c3c" }}
                   />
@@ -301,73 +326,97 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
               )}
             </div>
 
-            <div className="flex justify-center">
-              <button
-                onClick={swapPoints}
-                disabled={!origen || !destino}
-                className="btn btn-ghost btn-sm btn-circle"
-                title="Intercambiar origen y destino"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                  />
-                </svg>
-              </button>
-            </div>
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={useDestination}
+                onChange={handleUseDestinationToggle}
+                className="checkbox checkbox-xs"
+              />
+              <span className="text-xs font-medium">
+                Buscar también por punto destino
+              </span>
+            </label>
 
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium flex items-center gap-2">
-                  <span
-                    className={`w-3 h-3 rounded-full shrink-0 ${
-                      stage === "destino" ? "ring-2 ring-base-content/30" : ""
-                    }`}
-                    style={{ backgroundColor: "#3498db" }}
-                  />
-                  Punto destino
-                </span>
-                {destino && (
+            {useDestination && (
+              <>
+                <div className="flex justify-center">
                   <button
-                    onClick={resetDestino}
-                    className="btn btn-ghost btn-xs text-error"
+                    onClick={swapPoints}
+                    disabled={!origen || !destino}
+                    className="btn btn-ghost btn-sm btn-circle"
+                    title="Intercambiar origen y destino"
                   >
-                    ✕
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                      />
+                    </svg>
                   </button>
-                )}
-              </div>
-              {destino ? (
-                <p className="text-xs text-base-content/60 px-1">
-                  {destino[0].toFixed(5)}, {destino[1].toFixed(5)}
-                </p>
-              ) : (
-                <p className="text-xs text-base-content/40 px-1 italic">
-                  {origen ? "Haz clic en el mapa" : "—"}
-                </p>
-              )}
-            </div>
+                </div>
 
-            <div className="flex gap-2">
-              <button
-                onClick={handleStageToggle}
-                disabled={!origen}
-                className="btn btn-xs btn-outline flex-1"
-              >
-                {stage === "origen" ? "Editar destino" : "Editar origen"}
-              </button>
-              <button onClick={resetOrigen} className="btn btn-xs btn-outline">
-                Reiniciar
-              </button>
-            </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium flex items-center gap-2">
+                      <span
+                        className={`w-3 h-3 rounded-full shrink-0 ${
+                          stage === "destino" ? "ring-2 ring-base-content/30" : ""
+                        }`}
+                        style={{ backgroundColor: "#3498db" }}
+                      />
+                      Punto destino
+                    </span>
+                    {destino && (
+                      <button
+                        onClick={resetDestino}
+                        className="btn btn-ghost btn-xs text-error"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  {destino ? (
+                    <p className="text-xs text-base-content/60 px-1">
+                      {destino[0].toFixed(5)}, {destino[1].toFixed(5)}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-base-content/40 px-1 italic">
+                      Haz clic en el mapa
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleStageToggle}
+                    disabled={!origen}
+                    className="btn btn-xs btn-outline flex-1"
+                  >
+                    {stage === "origen" ? "Editar destino" : "Editar origen"}
+                  </button>
+                  <button onClick={resetOrigen} className="btn btn-xs btn-outline">
+                    Reiniciar
+                  </button>
+                </div>
+              </>
+            )}
+
+            {!useDestination && origen && (
+              <div className="flex gap-2">
+                <button onClick={resetOrigen} className="btn btn-xs btn-outline">
+                  Reiniciar
+                </button>
+              </div>
+            )}
 
             <div className="relative mt-2">
               <button
@@ -467,6 +516,29 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
               })}
             </div>
           )}
+        </div>
+
+        <div className="border-t border-base-300 px-4 py-2">
+          <button
+            onClick={() => setTutorialOpen(true)}
+            className="btn btn-ghost btn-xs w-full justify-start text-base-content/50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            ¿Cómo funciona?
+          </button>
         </div>
       </aside>
 
@@ -591,6 +663,79 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
           <FitBounds routes={selectedRoutes} />
         </MapContainer>
       </div>
+
+      {tutorialOpen && (
+        <div
+          className="modal modal-open z-[2000]"
+          onClick={() => setTutorialOpen(false)}
+        >
+          <div
+            className="modal-box max-w-sm p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold mb-4">
+              ¿Cómo usar el buscador?
+            </h3>
+            <div className="space-y-4 text-sm">
+              <div className="flex gap-3">
+                <span className="shrink-0 mt-0.5 text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="font-semibold">Elige un punto en el mapa</p>
+                  <p className="text-base-content/60">
+                    Toca cualquier lugar. Las rutas que pasan a menos de 500&#8239;m
+                    aparecerán en el panel lateral.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <span className="shrink-0 mt-0.5 text-info">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="3" />
+                    <line x1="12" y1="2" x2="12" y2="4" />
+                    <line x1="12" y1="20" x2="12" y2="22" />
+                    <line x1="2" y1="12" x2="4" y2="12" />
+                    <line x1="20" y1="12" x2="22" y2="12" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="font-semibold">Busca por dos puntos (opcional)</p>
+                  <p className="text-base-content/60">
+                    Marca la casilla &ldquo;Buscar también por punto destino&rdquo;
+                    y toca un segundo punto en el mapa.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <span className="shrink-0 mt-0.5 text-success">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </span>
+                <div>
+                  <p className="font-semibold">Explora los resultados</p>
+                  <p className="text-base-content/60">
+                    Usa los checkboxes para mostrar u ocultar cada ruta en el mapa.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="modal-action mt-4">
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => setTutorialOpen(false)}
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
