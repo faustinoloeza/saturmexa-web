@@ -212,7 +212,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return "";
     return window.location.href;
-  }, []);
+  }, [origen, destino]);
 
   const handleCopyLink = useCallback(async () => {
     try {
