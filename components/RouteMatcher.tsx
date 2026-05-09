@@ -236,7 +236,11 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
 
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return "";
-    return window.location.href;
+    const params = new URLSearchParams();
+    if (origen) params.set("origen", `${origen[0]},${origen[1]}`);
+    if (destino) params.set("destino", `${destino[0]},${destino[1]}`);
+    const qs = params.toString();
+    return `${window.location.origin}${window.location.pathname}${qs ? `?${qs}` : ""}`;
   }, [origen, destino]);
 
   const handleCopyLink = useCallback(async () => {
