@@ -491,6 +491,41 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
             />
           </svg>
         </button>
+
+        {!sidebarOpen && results && results.length > 0 && (
+          <button
+            onClick={toggleSidebar}
+            className="absolute bottom-5 left-1/2 -translate-x-1/2 z-[1000] lg:hidden
+                       bg-white/95 backdrop-blur-sm border border-base-300
+                       rounded-full shadow-lg px-3 py-2
+                       flex items-center gap-2 max-w-[92vw]
+                       active:scale-[0.97] transition-transform duration-150"
+          >
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              {results.slice(0, 3).map(({ route }) => (
+                <span
+                  key={route.id}
+                  className="inline-flex items-center gap-1 text-xs font-medium
+                             bg-base-200/80 rounded-full pl-1.5 pr-2 py-0.5 truncate shrink-0"
+                >
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: colorMap[route.id] }}
+                  />
+                  <span className="truncate max-w-[80px]">{route.name}</span>
+                </span>
+              ))}
+              {results.length > 3 && (
+                <span className="text-xs text-base-content/50 shrink-0 font-medium">
+                  +{results.length - 3}
+                </span>
+              )}
+            </div>
+            <span className="text-xs font-bold shrink-0">
+              {results.length} {results.length === 1 ? "ruta" : "rutas"}
+            </span>
+          </button>
+        )}
         <MapContainer
           center={MAP.center}
           zoom={MAP.zoom}
@@ -500,7 +535,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
         >
           <TileLayer attribution={TILE.attribution} url={TILE.url} />
           <Geofences routes={selectedRoutes} />
-          <ZoomControl position="bottomright" />
+          <ZoomControl position="topright" />
           <ClickHandler onClick={handleMapClick} />
           {origen && (
             <>
