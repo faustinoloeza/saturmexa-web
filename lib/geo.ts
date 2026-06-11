@@ -20,37 +20,44 @@ export function distance(a: [number, number], b: [number, number]): number {
   return 2 * EARTH_RADIUS * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
 }
 
-export function polylineLength(coords: [number, number][]): number {
-  let len = 0;
-  for (let i = 1; i < coords.length; i++) {
-    len += distance(coords[i - 1], coords[i]);
-  }
-  return len;
+export interface PolylineMeta {
+  total: number;
+  cumulative: number[];
 }
 
-export function interpolate(
+export function buildPolylineMeta(coords: [number, number][]): PolylineMeta {
+  const cumulative = new Array<number>(coords.length).fill(0);
+  let total = 0;
+  for (let i = 1; i < coords.length; i++) {
+    total += distance(coords[i - 1], coords[i]);
+    cumulative[i] = total;
+  }
+  return { total, cumulative };
+}
+
+export function interpolateAlong(
   coords: [number, number][],
+  { total, cumulative }: PolylineMeta,
   fraction: number
 ): [number, number] {
   if (coords.length === 0) return [0, 0];
-  if (coords.length === 1) return coords[0];
+  if (coords.length === 1 || total === 0) return coords[0];
 
-  const total = polylineLength(coords);
   const target = fraction * total;
-  let traveled = 0;
-
-  for (let i = 1; i < coords.length; i++) {
-    const segLen = distance(coords[i - 1], coords[i]);
-    if (traveled + segLen >= target) {
-      const t = (target - traveled) / segLen;
-      return [
-        coords[i - 1][0] + t * (coords[i][0] - coords[i - 1][0]),
-        coords[i - 1][1] + t * (coords[i][1] - coords[i - 1][1]),
-      ];
-    }
-    traveled += segLen;
+  let lo = 1;
+  let hi = coords.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (cumulative[mid] < target) lo = mid + 1;
+    else hi = mid;
   }
-  return coords[coords.length - 1];
+
+  const segLen = cumulative[lo] - cumulative[lo - 1];
+  const t = segLen === 0 ? 0 : (target - cumulative[lo - 1]) / segLen;
+  return [
+    coords[lo - 1][0] + t * (coords[lo][0] - coords[lo - 1][0]),
+    coords[lo - 1][1] + t * (coords[lo][1] - coords[lo - 1][1]),
+  ];
 }
 
 function pointToSegmentDist(
@@ -58,9 +65,6 @@ function pointToSegmentDist(
   a: [number, number],
   b: [number, number]
 ): number {
-  const segLen = distance(a, b);
-  if (segLen === 0) return distance(p, a);
-
   const midLat = ((a[0] + b[0]) / 2) * (Math.PI / 180);
   const latToM = 111_320;
   const lngToM = 111_320 * Math.cos(midLat);
@@ -72,6 +76,7 @@ function pointToSegmentDist(
   const dx = bx - ax;
   const dy = by - ay;
   const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) return Math.hypot(px - ax, py - ay);
 
   let t = ((px - ax) * dx + (py - ay) * dy) / lenSq;
   t = Math.max(0, Math.min(1, t));
@@ -79,7 +84,7 @@ function pointToSegmentDist(
   const projX = ax + t * dx;
   const projY = ay + t * dy;
 
-  return Math.sqrt((px - projX) ** 2 + (py - projY) ** 2);
+  return Math.hypot(px - projX, py - projY);
 }
 
 export function minDistanceToPolyline(

@@ -6,13 +6,7 @@ export const metadata: Metadata = {
   title: "Rutas — SATUR",
 };
 
-export default async function RoutesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ rutas?: string; route?: string }>;
-}) {
-  const params = await searchParams;
-
+export default async function RoutesPage() {
   let routes;
   try {
     routes = await getRoutes();
@@ -24,11 +18,5 @@ export default async function RoutesPage({
     );
   }
 
-  const raw = params.rutas || params.route || "";
-  const initialRouteIds = raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  return <RouteExplorer routes={routes} initialRouteIds={initialRouteIds} />;
+  return <RouteExplorer routes={routes} />;
 }

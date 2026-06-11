@@ -1,22 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 export function useSelection() {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [order, setOrder] = useState<string[]>([]);
 
   const toggle = useCallback((id: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-        setOrder((o) => o.filter((x) => x !== id));
-      } else {
-        next.add(id);
-        setOrder((o) => [...o.filter((x) => x !== id), id]);
-      }
-      return next;
-    });
+    setOrder((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
   }, []);
 
-  return { selected, toggle, order, has: (id: string) => selected.has(id) };
+  const selected = useMemo(() => new Set(order), [order]);
+
+  return { selected, toggle, order };
 }

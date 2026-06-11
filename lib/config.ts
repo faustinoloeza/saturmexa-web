@@ -52,5 +52,3 @@ export const ROUTES_URL =
   "https://raw.githubusercontent.com/floezahs/satur/refs/heads/main/rautes.json";
 
 export const REVALIDATE_SECONDS = 3600;
-
-export const SIDEBAR_WIDTH = "w-80" as const;

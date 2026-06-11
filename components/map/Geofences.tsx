@@ -12,14 +12,20 @@ function toLeaflet(polygon: Geofence["coordinates"]): [number, number][] {
   return polygon.map(([lng, lat]) => [lat, lng]);
 }
 
+// Los geofences son estáticos: la conversión [lng,lat] → [lat,lng] se hace una sola vez.
+const LEAFLET_GEOFENCES = geofences.map((gf) => ({
+  id: gf.id,
+  name: gf.name,
+  positions: toLeaflet(gf.coordinates),
+}));
+
 export default function Geofences({ routes }: GeofencesProps) {
   const visible = useMemo(() => {
-    if (routes.length === 0) return new Set<string>();
     const ids = new Set<string>();
-    for (const gf of geofences) {
-      const poly = toLeaflet(gf.coordinates);
+    if (routes.length === 0) return ids;
+    for (const gf of LEAFLET_GEOFENCES) {
       for (const route of routes) {
-        if (routeIntersectsGeofence(route.coordinates, poly)) {
+        if (routeIntersectsGeofence(route.coordinates, gf.positions)) {
           ids.add(gf.id);
           break;
         }
@@ -30,12 +36,12 @@ export default function Geofences({ routes }: GeofencesProps) {
 
   return (
     <>
-      {geofences.map((gf) => {
+      {LEAFLET_GEOFENCES.map((gf) => {
         if (!visible.has(gf.id)) return null;
         return (
           <Polygon
             key={gf.id}
-            positions={toLeaflet(gf.coordinates)}
+            positions={gf.positions}
             pathOptions={{
               color: "#8B5CF6",
               fillColor: "#8B5CF6",

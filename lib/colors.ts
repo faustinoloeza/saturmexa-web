@@ -1,3 +1,5 @@
+import type { ColorMap } from "@/lib/types";
+
 export const ROUTE_COLORS = [
   "#e74c3c", "#3498db", "#27ae60", "#d4ac0d", "#9b59b6",
   "#1abc9c", "#e67e22", "#2980b9", "#2ecc71", "#8e44ad",
@@ -17,4 +19,12 @@ export const ROUTE_COLORS = [
 
 export function getRouteColor(index: number): string {
   return ROUTE_COLORS[index % ROUTE_COLORS.length];
+}
+
+export function buildColorMap(routes: { id: string }[]): ColorMap {
+  const map: ColorMap = {};
+  routes.forEach((r, i) => {
+    map[r.id] = getRouteColor(i);
+  });
+  return map;
 }

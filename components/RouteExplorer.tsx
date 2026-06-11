@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { Route, ColorMap } from "@/lib/types";
-import { getRouteColor } from "@/lib/colors";
+import { buildColorMap } from "@/lib/colors";
 import { useSelection } from "@/lib/hooks/useSelection";
 import Sidebar from "@/components/Sidebar";
 
@@ -17,7 +17,6 @@ const MapView = dynamic(() => import("@/components/map/MapView"), {
 });
 
 function syncURL(ids: string[]) {
-  if (typeof window === "undefined") return;
   const params = new URLSearchParams(window.location.search);
   if (ids.length > 0) {
     params.set("rutas", ids.join(","));
@@ -30,44 +29,33 @@ function syncURL(ids: string[]) {
   window.history.replaceState(null, "", url);
 }
 
-interface RouteExplorerProps {
-  routes: Route[];
-  initialRouteIds: string[];
-}
-
-export default function RouteExplorer({
-  routes,
-  initialRouteIds,
-}: RouteExplorerProps) {
+export default function RouteExplorer({ routes }: { routes: Route[] }) {
   const { selected, toggle, order } = useSelection();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!initialized.current) {
-      initialized.current = true;
-      if (initialRouteIds.length > 0) {
-        const validIds = new Set(routes.map((r) => r.id));
-        for (const id of initialRouteIds) {
-          if (validIds.has(id)) toggle(id);
-        }
-      }
+    if (initialized.current) return;
+    initialized.current = true;
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("rutas") ?? params.get("route") ?? "";
+    const validIds = new Set(routes.map((r) => r.id));
+    for (const id of raw.split(",").map((s) => s.trim())) {
+      if (validIds.has(id)) toggle(id);
     }
-  }, [initialRouteIds, routes, toggle]);
+  }, [routes, toggle]);
 
+  const synced = useRef(false);
   useEffect(() => {
-    if (initialized.current) {
-      syncURL([...selected]);
+    // El primer render aún no refleja los ids de la URL; no sobreescribirla.
+    if (!synced.current) {
+      synced.current = true;
+      return;
     }
-  }, [selected]);
+    syncURL(order);
+  }, [order]);
 
-  const colorMap: ColorMap = useMemo(() => {
-    const map: ColorMap = {};
-    routes.forEach((r, i) => {
-      map[r.id] = getRouteColor(i);
-    });
-    return map;
-  }, [routes]);
+  const colorMap: ColorMap = useMemo(() => buildColorMap(routes), [routes]);
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), []);
@@ -79,15 +67,18 @@ export default function RouteExplorer({
     [toggle]
   );
 
-  const selectedRoutes = useMemo(() => {
-    const orderSet = new Set(order);
-    const filtered = routes.filter((r) => selected.has(r.id));
-    return filtered.sort((a, b) => {
-      const ai = orderSet.has(a.id) ? order.indexOf(a.id) : -1;
-      const bi = orderSet.has(b.id) ? order.indexOf(b.id) : -1;
-      return ai - bi;
-    });
-  }, [routes, selected, order]);
+  const routeById = useMemo(
+    () => new Map(routes.map((r) => [r.id, r])),
+    [routes]
+  );
+
+  const selectedRoutes = useMemo(
+    () =>
+      order
+        .map((id) => routeById.get(id))
+        .filter((r): r is Route => r !== undefined),
+    [order, routeById]
+  );
 
   return (
     <div className="h-full flex overflow-hidden">

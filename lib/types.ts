@@ -15,8 +15,3 @@ export interface RouteLine {
 export interface ColorMap {
   [id: string]: string;
 }
-
-export interface BusState {
-  routeId: string;
-  positions: [number, number][];
-}
