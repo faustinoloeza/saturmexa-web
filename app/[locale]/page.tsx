@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
 function MapIcon() {
   return (
@@ -30,38 +31,33 @@ function BusIcon() {
   );
 }
 
-const features = [
-  {
-    icon: <MapIcon />,
-    title: "Mapa Interactivo",
-    desc: "Visualiza y compara múltiples rutas simultáneamente sobre OpenStreetMap.",
-  },
-  {
-    icon: <SearchIcon />,
-    title: "Búsqueda por Punto",
-    desc: "Descubre qué rutas pasan cerca de cualquier ubicación en Cancún.",
-  },
-  {
-    icon: <BusIcon />,
-    title: "+9 Rutas",
-    desc: "Datos actualizados del transporte público de Cancún con animaciones en vivo.",
-  },
-];
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("HomePage");
 
-export default function HomePage() {
+  const features = [
+    { icon: <MapIcon />, title: t("featureMapTitle"), desc: t("featureMapDesc") },
+    { icon: <SearchIcon />, title: t("featureSearchTitle"), desc: t("featureSearchDesc") },
+    { icon: <BusIcon />, title: t("featureRoutesTitle"), desc: t("featureRoutesDesc") },
+  ];
+
   return (
     <div className="h-full flex flex-col">
       <section className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
         <div className="max-w-2xl">
           <div className="mb-3">
-            <span className="badge badge-primary badge-sm">v1.0</span>
+            <span className="badge badge-primary badge-sm">{t("badge")}</span>
           </div>
           <h1 className="text-5xl font-extrabold tracking-tight mb-4">
-            SATURMEX
+            {t("title")}
           </h1>
           <p className="text-lg text-base-content/60 mb-10 leading-relaxed max-w-lg mx-auto">
-            Explorador de rutas de transporte público de Cancún.
-            Encuentra, compara y comparte rutas de autobuses en tiempo real.
+            {t("intro")}
           </p>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-12">
@@ -85,14 +81,14 @@ export default function HomePage() {
 
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/routes" className="btn btn-primary">
-              Explorar Rutas
+              {t("exploreRoutes")}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14" />
                 <path d="m12 5 7 7-7 7" />
               </svg>
             </Link>
             <Link href="/que-ruta-pasa" className="btn btn-ghost">
-              ¿Qué ruta pasa por aquí?
+              {t("whatRoutePassesHere")}
             </Link>
           </div>
         </div>
@@ -100,10 +96,10 @@ export default function HomePage() {
 
       <footer className="border-t border-base-300 py-6 px-6 text-center text-xs text-base-content/40">
         <p>
-          Hecho en Cancún · Datos de{" "}
+          {t("footerMade")}{" "}
           <a href="https://www.openstreetmap.org" className="link link-hover" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>
           {" · "}
-          <Link href="/about" className="link link-hover">Acerca de</Link>
+          <Link href="/about" className="link link-hover">{t("footerAbout")}</Link>
         </p>
       </footer>
     </div>

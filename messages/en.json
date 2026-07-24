@@ -1,0 +1,93 @@
+{
+  "Metadata": {
+    "title": "SATUR - Transit Routes",
+    "description": "Public transit route explorer"
+  },
+  "Navbar": {
+    "brand": "SATURMEX",
+    "home": "Home",
+    "routes": "Routes",
+    "matcher": "Which route passes?",
+    "about": "About",
+    "languageAriaLabel": "Change language"
+  },
+  "HomePage": {
+    "badge": "v1.0",
+    "title": "SATURMEX",
+    "intro": "Public transit route explorer for Cancún. Find, compare and share bus routes in real time.",
+    "featureMapTitle": "Interactive Map",
+    "featureMapDesc": "View and compare multiple routes at once on OpenStreetMap.",
+    "featureSearchTitle": "Search by Point",
+    "featureSearchDesc": "Discover which routes pass near any location in Cancún.",
+    "featureRoutesTitle": "+9 Routes",
+    "featureRoutesDesc": "Up-to-date public transit data for Cancún with live animations.",
+    "exploreRoutes": "Explore Routes",
+    "whatRoutePassesHere": "Which route passes here?",
+    "footerMade": "Made in Cancún · Data from",
+    "footerAbout": "About"
+  },
+  "AboutPage": {
+    "metaTitle": "About — SATUR",
+    "stack": "Stack",
+    "links": "Links",
+    "supportProject": "Support the project",
+    "supportMercadoPago": "Support via Mercado Pago"
+  },
+  "RoutesPage": {
+    "metaTitle": "Routes — SATUR",
+    "loadError": "Error loading routes."
+  },
+  "QueRutaPasaPage": {
+    "metaTitle": "Which route passes? — SATUR",
+    "loadError": "Error loading routes."
+  },
+  "Sidebar": {
+    "title": "Routes",
+    "closeMenu": "Close menu",
+    "searchPlaceholder": "Search route...",
+    "selectAll": "All",
+    "deselectAll": "None",
+    "noResults": "No results",
+    "selectedCount": "{selected} of {total} selected"
+  },
+  "ShareMenu": {
+    "share": "Share",
+    "copyLink": "Copy Link",
+    "whatsapp": "WhatsApp",
+    "more": "More",
+    "whatsappText": "SATUR Routes: {url}",
+    "nativeShareTitle": "SATUR Routes",
+    "nativeShareText": "Public transit routes"
+  },
+  "RouteExplorer": {
+    "openMenu": "Open menu"
+  },
+  "RouteMatcher": {
+    "title": "Which route passes?",
+    "closePanel": "Close panel",
+    "openPanel": "Open panel",
+    "startPoint": "Starting point",
+    "endPoint": "Destination point",
+    "clickMap": "Click on the map",
+    "alsoSearchByDestination": "Also search by destination point",
+    "swapPoints": "Swap origin and destination",
+    "editDestination": "Edit destination",
+    "editOrigin": "Edit origin",
+    "reset": "Reset",
+    "clickMapForStart": "Click on the map to choose a starting point.",
+    "noResults": "No results",
+    "noRoutesWithinRadius": "No route passes within 500 m",
+    "ofBothPoints": " of both points.",
+    "ofThatPoint": " of that point.",
+    "routesFound": "{count, plural, one {# route} other {# routes}}",
+    "howItWorks": "How does it work?",
+    "tutorialTitle": "How to use the route finder?",
+    "tutorialStep1Title": "Choose a point on the map",
+    "tutorialStep1Desc": "Tap anywhere. Routes passing within 500 m will appear in the side panel.",
+    "tutorialStep2Title": "Search by two points (optional)",
+    "tutorialStep2Desc": "Check the “Also search by destination point” box and tap a second point on the map.",
+    "tutorialStep3Title": "Explore the results",
+    "tutorialStep3Desc": "Use the checkboxes to show or hide each route on the map.",
+    "understood": "Got it"
+  }
+}

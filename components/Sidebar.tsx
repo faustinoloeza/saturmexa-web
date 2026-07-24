@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import type { Route, ColorMap } from "@/lib/types";
 import ShareMenu from "@/components/ShareMenu";
 
@@ -21,6 +22,7 @@ export default function Sidebar({
   open,
   onClose,
 }: SidebarProps) {
+  const t = useTranslations("Sidebar");
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -64,28 +66,28 @@ export default function Sidebar({
       >
         <div className="p-4 border-b border-base-300">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold">Rutas</h2>
+            <h2 className="text-lg font-bold">{t("title")}</h2>
             <button
               onClick={onClose}
               className="btn btn-ghost btn-sm btn-square lg:hidden"
-              aria-label="Cerrar menú"
+              aria-label={t("closeMenu")}
             >
               ✕
             </button>
           </div>
           <input
             type="text"
-            placeholder="Buscar ruta..."
+            placeholder={t("searchPlaceholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="input input-bordered input-sm w-full"
           />
           <div className="flex gap-2 mt-2">
             <button className="btn btn-xs btn-outline flex-1" onClick={selectAll}>
-              Todos
+              {t("selectAll")}
             </button>
             <button className="btn btn-xs btn-outline flex-1" onClick={deselectAll}>
-              Ninguno
+              {t("deselectAll")}
             </button>
           </div>
 
@@ -95,7 +97,7 @@ export default function Sidebar({
         <ul className="flex-1 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
             <li className="text-sm text-base-content/50 p-3 text-center">
-              Sin resultados
+              {t("noResults")}
             </li>
           ) : (
             filtered.map((route) => {
@@ -132,7 +134,7 @@ export default function Sidebar({
         </ul>
 
         <div className="p-3 border-t border-base-300 text-xs opacity-60 text-center">
-          {selected.size} de {routes.length} seleccionadas
+          {t("selectedCount", { selected: selected.size, total: routes.length })}
         </div>
       </aside>
     </>

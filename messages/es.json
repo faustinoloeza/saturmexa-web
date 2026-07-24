@@ -1,0 +1,93 @@
+{
+  "Metadata": {
+    "title": "SATUR - Rutas de Transporte",
+    "description": "Explorador de rutas de transporte público"
+  },
+  "Navbar": {
+    "brand": "SATURMEX",
+    "home": "Inicio",
+    "routes": "Rutas",
+    "matcher": "¿Qué ruta pasa?",
+    "about": "Acerca de",
+    "languageAriaLabel": "Cambiar idioma"
+  },
+  "HomePage": {
+    "badge": "v1.0",
+    "title": "SATURMEX",
+    "intro": "Explorador de rutas de transporte público de Cancún. Encuentra, compara y comparte rutas de autobuses en tiempo real.",
+    "featureMapTitle": "Mapa Interactivo",
+    "featureMapDesc": "Visualiza y compara múltiples rutas simultáneamente sobre OpenStreetMap.",
+    "featureSearchTitle": "Búsqueda por Punto",
+    "featureSearchDesc": "Descubre qué rutas pasan cerca de cualquier ubicación en Cancún.",
+    "featureRoutesTitle": "+9 Rutas",
+    "featureRoutesDesc": "Datos actualizados del transporte público de Cancún con animaciones en vivo.",
+    "exploreRoutes": "Explorar Rutas",
+    "whatRoutePassesHere": "¿Qué ruta pasa por aquí?",
+    "footerMade": "Hecho en Cancún · Datos de",
+    "footerAbout": "Acerca de"
+  },
+  "AboutPage": {
+    "metaTitle": "Acerca de — SATUR",
+    "stack": "Stack",
+    "links": "Enlaces",
+    "supportProject": "Apoya el proyecto",
+    "supportMercadoPago": "Apoya con Mercado Pago"
+  },
+  "RoutesPage": {
+    "metaTitle": "Rutas — SATUR",
+    "loadError": "Error al cargar las rutas."
+  },
+  "QueRutaPasaPage": {
+    "metaTitle": "¿Qué ruta pasa por? — SATUR",
+    "loadError": "Error al cargar las rutas."
+  },
+  "Sidebar": {
+    "title": "Rutas",
+    "closeMenu": "Cerrar menú",
+    "searchPlaceholder": "Buscar ruta...",
+    "selectAll": "Todos",
+    "deselectAll": "Ninguno",
+    "noResults": "Sin resultados",
+    "selectedCount": "{selected} de {total} seleccionadas"
+  },
+  "ShareMenu": {
+    "share": "Compartir",
+    "copyLink": "Copiar Enlace",
+    "whatsapp": "WhatsApp",
+    "more": "Más",
+    "whatsappText": "Rutas SATUR: {url}",
+    "nativeShareTitle": "Rutas SATUR",
+    "nativeShareText": "Rutas de transporte público"
+  },
+  "RouteExplorer": {
+    "openMenu": "Abrir menú"
+  },
+  "RouteMatcher": {
+    "title": "¿Qué ruta pasa por?",
+    "closePanel": "Cerrar panel",
+    "openPanel": "Abrir panel",
+    "startPoint": "Punto inicial",
+    "endPoint": "Punto destino",
+    "clickMap": "Haz clic en el mapa",
+    "alsoSearchByDestination": "Buscar también por punto destino",
+    "swapPoints": "Intercambiar origen y destino",
+    "editDestination": "Editar destino",
+    "editOrigin": "Editar origen",
+    "reset": "Reiniciar",
+    "clickMapForStart": "Haz clic en el mapa para elegir un punto inicial.",
+    "noResults": "Sin resultados",
+    "noRoutesWithinRadius": "Ninguna ruta pasa a menos de 500 m",
+    "ofBothPoints": " de ambos puntos.",
+    "ofThatPoint": " de ese punto.",
+    "routesFound": "{count, plural, one {# ruta} other {# rutas}}",
+    "howItWorks": "¿Cómo funciona?",
+    "tutorialTitle": "¿Cómo usar el buscador?",
+    "tutorialStep1Title": "Elige un punto en el mapa",
+    "tutorialStep1Desc": "Toca cualquier lugar. Las rutas que pasan a menos de 500 m aparecerán en el panel lateral.",
+    "tutorialStep2Title": "Busca por dos puntos (opcional)",
+    "tutorialStep2Desc": "Marca la casilla “Buscar también por punto destino” y toca un segundo punto en el mapa.",
+    "tutorialStep3Title": "Explora los resultados",
+    "tutorialStep3Desc": "Usa los checkboxes para mostrar u ocultar cada ruta en el mapa.",
+    "understood": "Entendido"
+  }
+}

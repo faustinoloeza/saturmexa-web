@@ -10,6 +10,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
+import { useTranslations } from "next-intl";
 import type { Route, ColorMap } from "@/lib/types";
 import { buildColorMap } from "@/lib/colors";
 import { minDistanceToPolyline } from "@/lib/geo";
@@ -62,6 +63,7 @@ interface RouteMatcherProps {
 }
 
 export default function RouteMatcher({ routes, initialOrigen = null, initialDestino = null, onChange }: RouteMatcherProps) {
+  const t = useTranslations("RouteMatcher");
   const [origen, setOrigen] = useState<[number, number] | null>(initialOrigen);
   const [destino, setDestino] = useState<[number, number] | null>(initialDestino);
   const [stage, setStage] = useState<Stage>("origen");
@@ -232,11 +234,11 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
       >
         <div className="p-4 border-b border-base-300">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-bold">¿Qué ruta pasa por?</h2>
+            <h2 className="text-lg font-bold">{t("title")}</h2>
             <button
               onClick={closeSidebar}
               className="btn btn-ghost btn-sm btn-square lg:hidden"
-              aria-label="Cerrar panel"
+              aria-label={t("closePanel")}
             >
               ✕
             </button>
@@ -252,7 +254,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                     }`}
                     style={{ backgroundColor: "#e74c3c" }}
                   />
-                  Punto inicial
+                  {t("startPoint")}
                 </span>
                 {origen && (
                   <button
@@ -269,7 +271,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                 </p>
               ) : (
                 <p className="text-xs text-base-content/40 px-1 italic">
-                  Haz clic en el mapa
+                  {t("clickMap")}
                 </p>
               )}
             </div>
@@ -282,7 +284,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                 className="checkbox checkbox-xs"
               />
               <span className="text-xs font-medium">
-                Buscar también por punto destino
+                {t("alsoSearchByDestination")}
               </span>
             </label>
 
@@ -293,7 +295,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                     onClick={swapPoints}
                     disabled={!origen || !destino}
                     className="btn btn-ghost btn-sm btn-circle"
-                    title="Intercambiar origen y destino"
+                    title={t("swapPoints")}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -321,7 +323,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                         }`}
                         style={{ backgroundColor: "#3498db" }}
                       />
-                      Punto destino
+                      {t("endPoint")}
                     </span>
                     {destino && (
                       <button
@@ -338,7 +340,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                     </p>
                   ) : (
                     <p className="text-xs text-base-content/40 px-1 italic">
-                      Haz clic en el mapa
+                      {t("clickMap")}
                     </p>
                   )}
                 </div>
@@ -349,10 +351,10 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                     disabled={!origen}
                     className="btn btn-xs btn-outline flex-1"
                   >
-                    {stage === "origen" ? "Editar destino" : "Editar origen"}
+                    {stage === "origen" ? t("editDestination") : t("editOrigin")}
                   </button>
                   <button onClick={resetOrigen} className="btn btn-xs btn-outline">
-                    Reiniciar
+                    {t("reset")}
                   </button>
                 </div>
               </>
@@ -361,7 +363,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
             {!useDestination && origen && (
               <div className="flex gap-2">
                 <button onClick={resetOrigen} className="btn btn-xs btn-outline">
-                  Reiniciar
+                  {t("reset")}
                 </button>
               </div>
             )}
@@ -373,20 +375,20 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
         <div className="flex-1 overflow-y-auto">
           {results === null ? (
             <p className="text-sm text-base-content/50 text-center p-6">
-              Haz clic en el mapa para elegir un punto inicial.
+              {t("clickMapForStart")}
             </p>
           ) : results.length === 0 ? (
             <div className="text-center p-6">
-              <p className="text-sm font-semibold mb-1">Sin resultados</p>
+              <p className="text-sm font-semibold mb-1">{t("noResults")}</p>
               <p className="text-xs text-base-content/60">
-                Ninguna ruta pasa a menos de 500 m
-                {destino ? " de ambos puntos." : " de ese punto."}
+                {t("noRoutesWithinRadius")}
+                {destino ? t("ofBothPoints") : t("ofThatPoint")}
               </p>
             </div>
           ) : (
             <div className="p-2 space-y-1">
               <p className="text-xs text-base-content/60 px-3 py-1">
-                {results.length} {results.length === 1 ? "ruta" : "rutas"}
+                {t("routesFound", { count: results.length })}
               </p>
               {results.map(({ route, dOrigen, dDestino }) => {
                 const checked = selected.has(route.id);
@@ -443,7 +445,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                 d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            ¿Cómo funciona?
+            {t("howItWorks")}
           </button>
         </div>
       </aside>
@@ -452,7 +454,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
         <button
           onClick={toggleSidebar}
           className="btn btn-square bg-white border border-base-300 shadow-lg absolute top-3 left-3 z-[1000] lg:hidden"
-          aria-label="Abrir panel"
+          aria-label={t("openPanel")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -500,7 +502,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
               )}
             </div>
             <span className="text-xs font-bold shrink-0">
-              {results.length} {results.length === 1 ? "ruta" : "rutas"}
+              {t("routesFound", { count: results.length })}
             </span>
           </button>
         )}
@@ -570,7 +572,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-lg font-bold mb-4">
-              ¿Cómo usar el buscador?
+              {t("tutorialTitle")}
             </h3>
             <div className="space-y-4 text-sm">
               <div className="flex gap-3">
@@ -581,10 +583,9 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                   </svg>
                 </span>
                 <div>
-                  <p className="font-semibold">Elige un punto en el mapa</p>
+                  <p className="font-semibold">{t("tutorialStep1Title")}</p>
                   <p className="text-base-content/60">
-                    Toca cualquier lugar. Las rutas que pasan a menos de 500&#8239;m
-                    aparecerán en el panel lateral.
+                    {t("tutorialStep1Desc")}
                   </p>
                 </div>
               </div>
@@ -600,10 +601,9 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                   </svg>
                 </span>
                 <div>
-                  <p className="font-semibold">Busca por dos puntos (opcional)</p>
+                  <p className="font-semibold">{t("tutorialStep2Title")}</p>
                   <p className="text-base-content/60">
-                    Marca la casilla &ldquo;Buscar también por punto destino&rdquo;
-                    y toca un segundo punto en el mapa.
+                    {t("tutorialStep2Desc")}
                   </p>
                 </div>
               </div>
@@ -614,9 +614,9 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                   </svg>
                 </span>
                 <div>
-                  <p className="font-semibold">Explora los resultados</p>
+                  <p className="font-semibold">{t("tutorialStep3Title")}</p>
                   <p className="text-base-content/60">
-                    Usa los checkboxes para mostrar u ocultar cada ruta en el mapa.
+                    {t("tutorialStep3Desc")}
                   </p>
                 </div>
               </div>
@@ -626,7 +626,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
                 className="btn btn-primary btn-sm"
                 onClick={closeTutorial}
               >
-                Entendido
+                {t("understood")}
               </button>
             </div>
           </div>

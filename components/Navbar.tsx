@@ -1,17 +1,21 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const LINKS = [
-  { href: "/", label: "Inicio" },
-  { href: "/routes", label: "Rutas" },
-  { href: "/que-ruta-pasa", label: "¿Qué ruta pasa?" },
-  { href: "/about", label: "Acerca de" },
-];
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations("Navbar");
+  const otherLocale = locale === "es" ? "en" : "es";
+  const FLAGS: Record<string, string> = { es: "🇲🇽", en: "🇺🇸" };
+
+  const LINKS = [
+    { href: "/", label: t("home") },
+    { href: "/routes", label: t("routes") },
+    { href: "/que-ruta-pasa", label: t("matcher") },
+    { href: "/about", label: t("about") },
+  ];
 
   return (
     <nav className="navbar bg-base-100 shadow-sm min-h-14 px-4">
@@ -38,7 +42,7 @@ export default function Navbar() {
               <line x1="10" y1="8" x2="14" y2="8" />
             </svg>
           </span>
-          SATURMEX
+          {t("brand")}
         </Link>
       </div>
 
@@ -64,8 +68,18 @@ export default function Navbar() {
         </ul>
       </div>
 
-      <div className="navbar-end lg:hidden">
-        <div className="dropdown dropdown-end">
+      <div className="navbar-end gap-2">
+        <Link
+          href={pathname}
+          locale={otherLocale}
+          aria-label={t("languageAriaLabel")}
+          className="btn btn-outline btn-sm font-semibold gap-1.5"
+        >
+          <span className="text-base leading-none">{FLAGS[otherLocale]}</span>
+          {otherLocale.toUpperCase()}
+        </Link>
+
+        <div className="dropdown dropdown-end lg:hidden">
           <label tabIndex={0} className="btn btn-ghost btn-square">
             <svg
               xmlns="http://www.w3.org/2000/svg"

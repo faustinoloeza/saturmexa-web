@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Acerca de — SATUR",
-};
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 const techs = [
   "Flutter", "Docker", "NodeJS", "Android", "T-SQL",
@@ -10,7 +7,25 @@ const techs = [
   "Python", "Git", "Kotlin Multiplatform",
 ];
 
-export default function AboutPage() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "AboutPage" });
+  return { title: t("metaTitle") };
+}
+
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("AboutPage");
+
   return (
     <div className="h-full flex items-center justify-center px-6 py-16">
       <div className="max-w-xl w-full">
@@ -25,7 +40,7 @@ export default function AboutPage() {
 
         <div className="bg-base-200 rounded-box border border-base-300 p-6 mb-4">
           <h2 className="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3">
-            Stack
+            {t("stack")}
           </h2>
           <div className="flex flex-wrap gap-2">
             {techs.map((tech) => (
@@ -41,7 +56,7 @@ export default function AboutPage() {
 
         <div className="bg-base-200 rounded-box border border-base-300 p-6">
           <h2 className="text-sm font-semibold text-base-content/60 uppercase tracking-wider mb-3">
-            Enlaces
+            {t("links")}
           </h2>
           <div className="flex flex-col">
             <a
@@ -90,7 +105,7 @@ export default function AboutPage() {
           className="group mt-4 flex items-center justify-center gap-3 px-6 py-4 rounded-box bg-[#FFDD00] text-black font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
         >
           <span className="coffee-icon text-xl leading-none w-5 h-5 flex items-center justify-center shrink-0 group-hover:animate-none">☕</span>
-          <span>Apoya el proyecto</span>
+          <span>{t("supportProject")}</span>
         </a>
 
         <a
@@ -103,7 +118,7 @@ export default function AboutPage() {
             <rect x="2" y="5" width="20" height="14" rx="2" />
             <line x1="2" y1="10" x2="22" y2="10" />
           </svg>
-          <span>Apoya con Mercado Pago</span>
+          <span>{t("supportMercadoPago")}</span>
         </a>
 
       </div>

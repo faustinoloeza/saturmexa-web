@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 import type { Route, ColorMap } from "@/lib/types";
 import { buildColorMap } from "@/lib/colors";
 import { useSelection } from "@/lib/hooks/useSelection";
@@ -30,6 +31,7 @@ function syncURL(ids: string[]) {
 }
 
 export default function RouteExplorer({ routes }: { routes: Route[] }) {
+  const t = useTranslations("RouteExplorer");
   const { selected, toggle, order } = useSelection();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const initialized = useRef(false);
@@ -97,7 +99,7 @@ export default function RouteExplorer({ routes }: { routes: Route[] }) {
         <button
           onClick={toggleSidebar}
           className="btn btn-square bg-base-200 border border-base-300 shadow-lg absolute top-3 left-3 z-[1000] lg:hidden"
-          aria-label="Abrir menú"
+          aria-label={t("openMenu")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
