@@ -18,3 +18,25 @@
     -webkit-backdrop-filter: blur(8px);
   }
 }
+
+/* Buy Me a Coffee link */
+@keyframes coffee-wiggle {
+  0%, 85%, 100% { transform: rotate(0deg); }
+  90% { transform: rotate(-8deg); }
+  95% { transform: rotate(8deg); }
+}
+
+.coffee-icon {
+  animation: coffee-wiggle 2.5s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+/* Mercado Pago link */
+@keyframes card-pulse {
+  0%, 85%, 100% { transform: scale(1); }
+  90% { transform: scale(1.2); }
+}
+
+.card-icon {
+  animation: card-pulse 2.5s ease-in-out infinite;
+}

@@ -83,6 +83,29 @@ export default function AboutPage() {
           </div>
         </div>
 
+        <a
+          href="https://buymeacoffee.com/saturmex"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mt-4 flex items-center justify-center gap-3 px-6 py-4 rounded-box bg-[#FFDD00] text-black font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+        >
+          <span className="coffee-icon text-xl leading-none w-5 h-5 flex items-center justify-center shrink-0 group-hover:animate-none">☕</span>
+          <span>Apoya el proyecto</span>
+        </a>
+
+        <a
+          href="https://link.mercadopago.com.mx/saturmex"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mt-3 flex items-center justify-center gap-3 px-6 py-4 rounded-box bg-[#00B1EA] text-white font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="card-icon shrink-0 group-hover:animate-none">
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          <span>Apoya con Mercado Pago</span>
+        </a>
+
       </div>
     </div>
   );
