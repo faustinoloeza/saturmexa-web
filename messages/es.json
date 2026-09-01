@@ -62,6 +62,13 @@
   "RouteExplorer": {
     "openMenu": "Abrir menú"
   },
+  "MapStyle": {
+    "toggleAriaLabel": "Cambiar estilo de mapa",
+    "buttonLabel": "Tema",
+    "light": "Claro",
+    "voyager": "Colores",
+    "dark": "Oscuro"
+  },
   "RouteMatcher": {
     "title": "¿Qué ruta pasa por?",
     "closePanel": "Cerrar panel",

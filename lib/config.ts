@@ -4,11 +4,27 @@ export const MAP = {
   scrollWheelZoom: true,
 } as const;
 
-export const TILE = {
-  url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+const CARTO_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+
+export const TILE_STYLES = {
+  light: {
+    url: `https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_API_KEY}`,
+    attribution: CARTO_ATTRIBUTION,
+  },
+  voyager: {
+    url: `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_API_KEY}`,
+    attribution: CARTO_ATTRIBUTION,
+  },
+  dark: {
+    url: `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_API_KEY}`,
+    attribution: CARTO_ATTRIBUTION,
+  },
 } as const;
+
+export type TileStyleId = keyof typeof TILE_STYLES;
+
+export const DEFAULT_TILE_STYLE: TileStyleId = "voyager";
 
 export const LINE_STYLE = {
   borderColor: "#ffffff",

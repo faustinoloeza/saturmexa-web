@@ -118,6 +118,33 @@ export function pointInPolygon(
   return inside;
 }
 
+export interface Bounds {
+  minLat: number;
+  maxLat: number;
+  minLng: number;
+  maxLng: number;
+}
+
+export function boundsOf(coords: [number, number][]): Bounds {
+  let minLat = Infinity, maxLat = -Infinity, minLng = Infinity, maxLng = -Infinity;
+  for (const [lat, lng] of coords) {
+    if (lat < minLat) minLat = lat;
+    if (lat > maxLat) maxLat = lat;
+    if (lng < minLng) minLng = lng;
+    if (lng > maxLng) maxLng = lng;
+  }
+  return { minLat, maxLat, minLng, maxLng };
+}
+
+export function boundsOverlap(a: Bounds, b: Bounds): boolean {
+  return (
+    a.minLat <= b.maxLat &&
+    a.maxLat >= b.minLat &&
+    a.minLng <= b.maxLng &&
+    a.maxLng >= b.minLng
+  );
+}
+
 export function routeIntersectsGeofence(
   coords: [number, number][],
   polygon: [number, number][]

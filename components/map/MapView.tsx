@@ -1,9 +1,7 @@
 "use client";
 
-import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import type { Route, ColorMap } from "@/lib/types";
-import { MAP, TILE } from "@/lib/config";
-import "@/lib/leaflet-setup";
+import BaseMap from "@/components/map/BaseMap";
 import RouteLayers from "@/components/map/RouteLayers";
 
 interface MapViewProps {
@@ -13,16 +11,8 @@ interface MapViewProps {
 
 export default function MapView({ routes, colorMap }: MapViewProps) {
   return (
-    <MapContainer
-      center={MAP.center}
-      zoom={MAP.zoom}
-      scrollWheelZoom={MAP.scrollWheelZoom}
-      zoomControl={false}
-      style={{ height: "100%", width: "100%" }}
-    >
-      <TileLayer attribution={TILE.attribution} url={TILE.url} />
-      <ZoomControl position="bottomright" />
+    <BaseMap zoomPosition="bottomright" styleControlClassName="top-3 right-3">
       <RouteLayers routes={routes} colorMap={colorMap} />
-    </MapContainer>
+    </BaseMap>
   );
 }

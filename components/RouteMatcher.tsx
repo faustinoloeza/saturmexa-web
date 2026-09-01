@@ -1,21 +1,13 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  ZoomControl,
-  Marker,
-  Circle,
-  useMapEvents,
-} from "react-leaflet";
+import { Marker, Circle, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import { useTranslations } from "next-intl";
 import type { Route, ColorMap } from "@/lib/types";
 import { buildColorMap } from "@/lib/colors";
 import { minDistanceToPolyline } from "@/lib/geo";
-import { TILE, MAP } from "@/lib/config";
-import "@/lib/leaflet-setup";
+import BaseMap from "@/components/map/BaseMap";
 import RouteLayers from "@/components/map/RouteLayers";
 import ShareMenu from "@/components/ShareMenu";
 
@@ -506,15 +498,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
             </span>
           </button>
         )}
-        <MapContainer
-          center={MAP.center}
-          zoom={MAP.zoom}
-          zoomControl={false}
-          scrollWheelZoom
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer attribution={TILE.attribution} url={TILE.url} />
-          <ZoomControl position="topright" />
+        <BaseMap zoomPosition="bottomright" styleControlClassName="top-3 right-3">
           <ClickHandler onClick={handleMapClick} />
           {origen && (
             <>
@@ -559,7 +543,7 @@ export default function RouteMatcher({ routes, initialOrigen = null, initialDest
             </>
           )}
           <RouteLayers routes={selectedRoutes} colorMap={colorMap} />
-        </MapContainer>
+        </BaseMap>
       </div>
 
       {tutorialOpen && (
